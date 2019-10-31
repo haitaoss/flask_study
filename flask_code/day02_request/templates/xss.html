@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- <script> alert('hello sttack') </script> 就会出现xss攻击 -->
+<form action="" method="post">
+    <textarea name="text"></textarea>
+    <input type="submit" value="提价">
+</form>
+{{text | safe }}
+</body>
+
+</html>

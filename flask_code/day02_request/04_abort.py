@@ -1,5 +1,5 @@
 # coding:utf-8
-from flask import Flask, request, abort, Response
+from flask import Flask, request, abort
 
 app = Flask(__name__)
 
@@ -11,7 +11,7 @@ def login():
     if name == 'zhangsan' and pwd == 'admin':
         return 'login success'
     # 使用abort函数可以立即终止试图函数的执行
-    # 并可以返回给前段特定的信息
+    # 并可以返回给前端特定的信息
     # 1.传递状态码信息,最常用就是返回状态码
     abort(404)
     # 2.传递相应体信息，还不如直接return ‘login failed’

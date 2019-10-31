@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p>name = {{name}}</p>
+<p>age = {{age}}</p>
+<p>my_dict: city= {{my_dict['city']}}</p>
+<p>my_dict: city= {{my_dict.city}}</p>
+<p>my_list: {{my_list}}</p>
+<p>my_list[my_int]:{{my_list[my_int]}} </p>
+<!-- 区别允许数字和字符串的相加，django中的使用过滤器 -->
+<p>my_list[0] + my_list[1] = {{my_list[0]+my_list[1]}}</p>
+<p>{{ 'hello' + 'python' }}</p>
+<!-- 过滤器 -->
+<p>A{{ 'flask world' | trim | upper}}a</p>
+<hr/>
+<p>{{ my_list | li2 }}</p>
+<p>{{ my_list | li3 }}</p>
+</body>
+</html>

@@ -1,5 +1,5 @@
 # coding:utf-8
-from flask import Flask, session, g
+from flask import Flask, session
 
 # 创建应用
 app = Flask(__name__)
