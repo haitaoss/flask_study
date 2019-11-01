@@ -3,6 +3,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
+from flask_script import Manager, Shell
+from flask_migrate import Migrate, MigrateCommand
 import json
 
 app = Flask(__name__)
@@ -21,10 +23,18 @@ class Config(object):
 
 
 # 加载配置
-
 app.config.from_object(Config)
 # 创建数据源
 db = SQLAlchemy(app)
+
+# 创建flask脚本管理工具对象
+manager = Manager(app)
+
+# 创建一个真正数据库迁移工具对象
+Migrate(app, db)
+
+# 向manager对象中添加数据库的操作命令
+manager.add_command('db', MigrateCommand)  # 第一个是命令的别名，第二个是命令
 
 
 # 创建表单模型类
@@ -42,8 +52,10 @@ class Author(db.Model):
     __tablename__ = 'tbl_authors'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), unique=True)
+    email = db.Column(db.String(64))
     # 方便我们查询，反向查询，反向引用
     books = db.relationship('Book', backref='author')
+    mobile = db.Column(db.String(11))
 
 
 class Book(db.Model):
@@ -129,20 +141,11 @@ def delete_book():
     return redirect(url_for('index'))
 
 
-@app.route('/json', methods=['POST', 'GET'])
-def jsonxx():
-    if request.method == 'POST':
-        print(request.data)
-        print(type(request.data.decode('utf-8')))
-        req_dict = json.loads(request.data.decode('utf-8'))
-        print(type(req_dict))
-        return jsonify(code=0)
-    return render_template('test_json_ajax.html')
-
-
 # 启动项目
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    # 通过manager启动程序
+    manager.run()
+    # app.run(host='0.0.0.0', port=8080, debug=True)
     # db.drop_all()
     # db.create_all()
     #

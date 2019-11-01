@@ -1,0 +1,28 @@
+from flask_migrate import Migrate,MigrateCommand
+from flask_script import Shell,Manager
+
+1.整个flask应用程序是有，Manager的实例对象，帮助我们进行维护的。
+2.Migrate专门用户数据库的迁移操作，更新等等，数据库的操作都是用他
+3.数据库的命令是在MigrateCommand里面定义的
+
+
+具体代码
+app = Flask(__name__)
+db = SQLAlchemy(app)
+manager Manager(app)
+
+migrate = Migrate(app,db)
+传递db在于，的使用migrate操作数据库
+传递app在于，在构建的时候会在app里面添加属性migrate，他的值就是Migrate(app,db)的返回值，所以这里完全可以不接受返回值
+    因为，在构建Migrate对象的时候会往app里面增加属性。直接用app里面的来操作即可
+
+manager.add_command('db',MigrateCommand) # db就是对命令进行分类,写啥都可以，这是个变量
+
+
+操作
+python author_book.py db init               # 数据库的初始化，就类似与git init
+python author_book.py db migrate            # 生成迁移文件
+python author_book.py db migrate -m '备注信息'  # 生成迁移文件的时候，加上备注
+python author_book.py db upgrade            # 执行迁移文件
+python author_book.py db history        # 查看对数据库做了什么修改，可回退
+python author_book.py db downgrade base # base是版本号
