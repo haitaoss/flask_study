@@ -2,6 +2,8 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
+
+
 app = Flask(__name__)
 
 
@@ -9,7 +11,8 @@ app = Flask(__name__)
 class Config(object):
     """配置参数"""
     # sqlalchemy的配置参数
-    SQLALCHEMY_DATABASE_URI = 'mysql://root:root@127.0.0.1:3306/db_python04'
+    # SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:root@127.0.0.1:3306/db_python04'
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:root@127.0.0.1:3306/db_python04'
 
     # sqlalchmy自动跟踪数据库的修改操作
     SQLALCHEMY_TRACK_MODIFICATIONS = True
@@ -70,6 +73,7 @@ def index():
 
 
 if __name__ == '__main__':
+    # pymysql.install_as_MySQLdb()
     # 通过db的方式
     # 清除数据库里面的所有数据（数据库刚创建出来就用来爽一爽，别瞎用）
     db.drop_all()
