@@ -1,0 +1,24 @@
+公司工作的时候，执行更新删除操作
+先查一查，更新或者删除的记录对不对，别搞错了
+select * from tbl_users where id = 3;
+update from tbl_users set xx=xx where id =3;
+delete from tbl_users where id = 3;
+
+
+# 更新操作
+    1.修改一个
+    from db_demo import *
+    user = User.query.get(1)
+    user.name = 'haitao'
+    db.session.add(user)
+    db.session.commit()
+
+    2.修改多个
+    User.query.filter(User.name=='zhou').update({'name':'python','email':'xx'})
+    User.query.filter_by(name='zhou').update({'name':'python','email':'xx'})
+    # 就是查询集后面可以使用upate()函数
+    db.session.commit()
+
+# 删除操作
+db.session.delete(User.query.get(1)) # 里面是具体的对象，不能是查询集
+db.session.commit()

@@ -1,0 +1,70 @@
+这些操作返回的都是查询集对象,建议使用原生的，因为SQLAlchemy是python提供操作数据库的工具。任何web框架都可以使用
+    User.query
+    User.query.filter()
+    User.query.offset()
+    User.query.limit()
+    User.query.order_by('-id') # 这是模拟django出现的降序方式
+    User.query.order_by('id') # 这是模拟django出现的降序方式
+    User.query.order_by(User.id.desc()) # 这才是原生的
+    User.query.order_by(User.id.asc()) # 这才是原生的
+    User.query.order_by(User.id) # 这才是原生的
+    db.session.query(查询的字段).group_by(分组条件) # 分组查询
+
+查询集后面可以使用all() first() get() 等等获取实际的对象
+
+涉及到的函数
+    from sqlalchemy import or_ # 得先导入这个函数 条件或
+    from sqlalchemy import func #func.count()
+
+查询语句
+    查询所有
+    Role.query.all()
+    db.session.query(Role).all() # 这是最原始的方法
+
+    查询数据库表的第一条记录
+    Role.query.first()
+    db.session.query(Role).first()
+
+    按主键条件,就是select * from Role where id= ?，已经写死了不向django的Role.objects.get()
+    Role.query.get(1)
+    db.session.query(Role).get(1)
+
+条件查询
+    1. User.query.filter_by()这是对User.query.filter()的简便写法。但是条件只能是且 and &&
+
+    User.query.filter_by(name='wang',id=1) # 返回值是一个查询集<flask_sqlalchemy.BaseQuery at 0x7f1d69e561d0>
+    可以对查询集，接着操作
+    User.query.filter_by(name='wang').all()
+    User.query.filter_by(name='wang').first() # 获取不到返回值是None，django里面是抛出DoseNotExist
+
+    2.万能的查询语句User.query.filter()
+
+    user = User.query.filter(User.name=='wang',User.role_id==1).first() # 等于必须是==
+
+    或的条件
+    from sqlalchemy import or_ # 得先导入这个函数
+    User.query.filter(or_(User.name=='wang',User.email.endswith('163.com'))).all()
+
+
+    3.offset偏移，在这里就是跳过几条取数据
+    User.query.filter.offset(2).all()
+    User.query.offset(1).limit(2).all()
+    User.query.limit(2).all()
+
+    4.order_by() 排序
+    User.query.order_by('-id') # 这是模拟django出现的降序方式
+    User.query.order_by('id') # 这是模拟django出现的降序方式
+    User.query.order_by(User.id.desc()) # 这才是原生的
+    User.query.order_by(User.id.asc()) # 这才是原生的
+    User.query.order_by(User.id) # 这才是原生的
+
+    5.分组,
+    db.session.query(查询的字段).group_by(分组条件),分组查询返回的不在是对象因为
+    select *  from tbl_users group by role_id; 是不合语法的，需要指定查询什么字段
+    所以的这么写
+    from sqlalchemy import func # 因为使用了count()才导入这个包
+    db.session.query(User.role_id,func.count(User.role_id)).group_by(User.role_id).all()
+
+    6.关联查询
+    Role.query.get(1).users
+    User.query.get(1).role
